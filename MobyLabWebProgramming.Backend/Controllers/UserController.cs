@@ -100,4 +100,10 @@ public class UserController : AuthorizedController // Here we use the Authorized
             this.FromServiceResponse(await UserService.DeleteUser(id)) :
             this.ErrorMessageResult(currentUser.Error);
     }
+
+    [HttpPost] // This attribute will make the controller respond to a HTTP POST request on the route /api/User/Add.
+    public async Task<ActionResult<RequestResponse>> Register([FromBody] UserRegisterDTO user)
+    {
+        return this.FromServiceResponse(await UserService.RegisterUser(user)) ;
+    }
 }

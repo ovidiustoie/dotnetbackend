@@ -7,6 +7,7 @@ using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
+using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
@@ -102,6 +103,23 @@ public class UserService : IUserService
         await _mailService.SendMail(user.Email, "Welcome!", MailTemplates.UserAddTemplate(user.Name), true, "My App", cancellationToken); // You can send a notification on the user email. Change the email if you want.
 
         return ServiceResponse.ForSuccess();
+    }
+
+    public async Task<ServiceResponse> RegisterUser(UserRegisterDTO user, CancellationToken cancellationToken = default)
+    {
+        if (String.IsNullOrEmpty(user.Password))
+           return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Password is required!", ErrorCodes.CannotAdd));
+        if (user.Password != user.ConfirmPassword)
+            return ServiceResponse.FromError(new(HttpStatusCode.BadRequest, "Passwords mismatch!", ErrorCodes.CannotAdd));
+
+        var payloadUser = new UserAddDTO
+        {
+            Email = user.Email,
+            Name = user.Name,
+            Role = UserRoleEnum.Personnel,
+            Password = PasswordUtils.HashPassword(user.Password),
+        };
+        return await AddUser(payloadUser, null, cancellationToken);
     }
 
     public async Task<ServiceResponse> UpdateUser(UserUpdateDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
