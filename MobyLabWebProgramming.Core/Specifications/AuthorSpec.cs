@@ -7,14 +7,14 @@ namespace MobyLabWebProgramming.Core.Specifications;
 /// This is a simple specification to filter the user entities from the database via the constructors.
 /// Note that this is a sealed class, meaning it cannot be further derived.
 /// </summary>
-public sealed class AuthorSpec : BaseSpec<AuthorSpec, Author>
+public sealed class UserSpec : BaseSpec<UserSpec, User>
 {
-    public AuthorSpec(Guid id) : base(id)
+    public UserSpec(Guid id) : base(id)
     {
     }
 
-    public AuthorSpec(string fullName)
+    public UserSpec(string email)
     {
-        Query.Where(e => e.FullName == fullName);
+        Query.Where(e => e.Email == email);
     }
 }
