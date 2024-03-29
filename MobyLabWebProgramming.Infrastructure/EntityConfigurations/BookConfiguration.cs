@@ -14,7 +14,7 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(e => e.Title)
             .HasMaxLength(255)
             .IsRequired();
-        builder.Property(e => e.Symmary)
+        builder.Property(e => e.Summary)
             .HasMaxLength(4095);
         builder.Property(e => e.CreatedAt)
             .IsRequired();

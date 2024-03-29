@@ -35,7 +35,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Symmary = table.Column<string>(type: "character varying(4095)", maxLength: 4095, nullable: false),
+                    Summary = table.Column<string>(type: "character varying(4095)", maxLength: 4095, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },

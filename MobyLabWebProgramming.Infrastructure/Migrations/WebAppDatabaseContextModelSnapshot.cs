@@ -84,7 +84,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Symmary")
+                    b.Property<string>("Summary")
                         .IsRequired()
                         .HasMaxLength(4095)
                         .HasColumnType("character varying(4095)");
