@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="MobyLabWebProgramming.Core.Entities.Author">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="Author" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MobyLabWebProgramming.Core.Entities.Book">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="Book" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MobyLabWebProgramming.Core.Entities.BookItem">
+    <Position X="4.75" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="BookItem" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MobyLabWebProgramming.Core.Entities.BookAuthor">
+    <Position X="1.5" Y="2.75" Width="1.5" />
+    <Members>
+      <Method Name="BookAuthor" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -116,7 +116,7 @@ public class UserService : IUserService
         {
             Email = user.Email,
             Name = user.Name,
-            Role = UserRoleEnum.Personnel,
+            Role = UserRoleEnum.Client,
             Password = PasswordUtils.HashPassword(user.Password),
         };
         return await AddUser(payloadUser, null, cancellationToken);

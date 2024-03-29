@@ -33,5 +33,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
+   
     }
 }
