@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using MobyLabWebProgramming.Core.Constants;
+using System.Text;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
@@ -7,7 +7,6 @@ using MobyLabWebProgramming.Core.Errors;
 using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Core.Specifications;
-using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Database;
 using MobyLabWebProgramming.Infrastructure.Repositories.Interfaces;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
@@ -53,15 +52,7 @@ public class AuthorService : IAuthorService
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Clients can't add authors", ErrorCodes.CannotAdd));
         }
-        var fullName = author.FirstName + ' ' + author.LastName.ToUpper();  
-
-        var result = await _repository.GetAsync(new AuthorSpec(fullName), cancellationToken);
-
-        if (result != null)
-        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "The author already exists!", ErrorCodes.UserAlreadyExists));
-        }
-
+        string fullName = AuthorService.getFullName(author.FirstName, author.LastName);
         await _repository.AddAsync(new Author
         {
             FirstName = author.FirstName,
@@ -76,20 +67,20 @@ public class AuthorService : IAuthorService
 
     public async Task<ServiceResponse> UpdateAuthor(AuthorUpdateDTO user, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client) // Verify who can add the user, you can change this however you se fit.
+        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client) 
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin  or personal can update the authors!", ErrorCodes.CannotUpdate));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can update the authors!", ErrorCodes.CannotUpdate));
         }
 
         var entity = await _repository.GetAsync(new AuthorSpec(user.Id), cancellationToken);
 
-        if (entity != null) // Verify if the user is not found, you cannot update an non-existing entity.
+        if (entity != null) 
         {
             entity.FirstName = user.FirstName ?? entity.FirstName;
             entity.LastName = user.LastName ?? entity.LastName;
             entity.Description = user.Description ?? entity.Description;
-            entity.FullName = entity.FirstName + ' ' + entity.LastName.ToUpper();
-            await _repository.UpdateAsync(entity, cancellationToken); // Update the entity and persist the changes.
+            entity.FullName = AuthorService.getFullName(entity.FirstName, entity.LastName);
+            await _repository.UpdateAsync(entity, cancellationToken); 
         }
 
         return ServiceResponse.ForSuccess();
@@ -97,14 +88,38 @@ public class AuthorService : IAuthorService
 
     public async Task<ServiceResponse> DeleteAuthor(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client) // Verify who can add the user, you can change this however you se fit.
+        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client) 
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin  or personal can delete the authors!", ErrorCodes.CannotDelete));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can delete the authors!", ErrorCodes.CannotDelete));
         }
 
         await _repository.DeleteAsync<User>(id, cancellationToken); // Delete the entity.
 
         return ServiceResponse.ForSuccess();
+    }
+
+    public static string getFullName(string firstName, string lastName)
+    {
+        StringBuilder fullName = new StringBuilder();
+        bool addSpace = true;
+        if (!string.IsNullOrEmpty(firstName))
+        {
+            fullName.Append(firstName);
+
+        } else
+        {
+            addSpace = false;
+        }
+        if (!string.IsNullOrEmpty(lastName))
+        {
+            if (addSpace)
+            {
+                fullName.Append(" ");
+            }
+            fullName.Append(lastName.ToUpper());
+
+        }
+        return fullName.ToString();
     }
 }
 
