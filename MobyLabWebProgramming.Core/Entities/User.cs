@@ -19,6 +19,7 @@ public class User : BaseEntity
     /// Note that this field will be null if not explicitly requested via a Include query, also note that the property is used by the ORM, in the database this collection doesn't exist. 
     /// </summary>
     public ICollection<UserFile> UserFiles { get; set; } = default!;
-    
+    public ICollection<Feedback> Feedbacks { get; set; } = default!;
+
     public Librarian? Librarian { get; set; }
 }

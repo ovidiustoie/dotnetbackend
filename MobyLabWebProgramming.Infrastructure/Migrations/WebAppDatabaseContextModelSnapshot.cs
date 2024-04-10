@@ -129,6 +129,35 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.ToTable("BookItem");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Feedback", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(4095)
+                        .HasColumnType("character varying(4095)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Feedback");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Librarian", b =>
                 {
                     b.Property<Guid>("Id")
@@ -267,6 +296,17 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("Book");
                 });
 
+            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Feedback", b =>
+                {
+                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Librarian", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
@@ -296,6 +336,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.User", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Librarian");
 
                     b.Navigation("UserFiles");
