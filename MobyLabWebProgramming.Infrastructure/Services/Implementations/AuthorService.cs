@@ -93,7 +93,7 @@ public class AuthorService : IAuthorService
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can delete the authors!", ErrorCodes.CannotDelete));
         }
 
-        await _repository.DeleteAsync<User>(id, cancellationToken); // Delete the entity.
+        await _repository.DeleteAsync<Author>(id, cancellationToken); // Delete the entity.
 
         return ServiceResponse.ForSuccess();
     }
