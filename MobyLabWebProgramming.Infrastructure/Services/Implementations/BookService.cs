@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Net;
 using System.Text;
 using Ardalis.Specification;
@@ -54,17 +55,15 @@ public class BookService : IBookService
         {
             Title = book.Title,
             Summary = book.Summary,
+            Authors = new Collection<Author>(),
         };
-        await _repository.DbContext.Set<Book>().AddAsync(newBook, cancellationToken);
         foreach (var author in book.Authors)
         {
-            await _repository.DbContext.Set<BookAuthor>().AddAsync(new BookAuthor
-            {
-                BookId = newBook.Id,
-                AuthorId = author.Id,
-            }, cancellationToken);
+            var authorDB = await _repository.GetAsync<Author>(author.Id, cancellationToken);
+            if (authorDB != null)
+                newBook.Authors.Add(authorDB);
         }
-        await _repository.DbContext.SaveChangesAsync(cancellationToken); 
+        await _repository.AddAsync(newBook); 
      
         return ServiceResponse.ForSuccess();
     }

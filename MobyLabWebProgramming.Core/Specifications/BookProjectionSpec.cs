@@ -27,10 +27,7 @@ public sealed class BookProjectionSpec : BaseSpec<BookProjectionSpec, Book, Book
     {
     }
 
-    public BookProjectionSpec(Guid id)
-    {
-        Query.Select(Derived.Spec).Where(e => e.Id == id).Include(x => x.Authors.Select(author => author.FullName));
-    }
+    public BookProjectionSpec(Guid id) => Query.Select(Derived.Spec).Where(e => e.Id == id).Include(x => x.Authors);
 
     public BookProjectionSpec(string? search)
     {
