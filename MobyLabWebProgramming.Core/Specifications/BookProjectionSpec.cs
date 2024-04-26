@@ -20,14 +20,16 @@ public sealed class BookProjectionSpec : BaseSpec<BookProjectionSpec, Book, Book
         Id = e.Id,
         Title = e.Title,
         Summary = e.Summary,
-    
+
     };
 
     public BookProjectionSpec(bool orderByCreatedAt = true) : base(orderByCreatedAt)
     {
     }
 
-    public BookProjectionSpec(Guid id) => Query.Select(Derived.Spec).Where(e => e.Id == id).Include(x => x.Authors);
+    public BookProjectionSpec(Guid id) {
+        Query.Select(Derived.Spec).Include(b => b.Authors).Where(e => e.Id == id);
+    }
 
     public BookProjectionSpec(string? search)
     {

@@ -20,7 +20,7 @@ public class BookController : AuthorizedController
     {
         _service = bookService;
     }
-    [Authorize] 
+    // [Authorize] 
     [HttpGet("{id:guid}")] 
     public async Task<ActionResult<RequestResponse<BookAddDTO>>> GetById([FromRoute] Guid id) 
     {
@@ -29,17 +29,18 @@ public class BookController : AuthorizedController
         return currentUser.Result != null ?
             this.FromServiceResponse(await _service.GetBook(id)) :
             this.ErrorMessageResult<BookAddDTO>(currentUser.Error);
+        
     }
 
     [Authorize]
     [HttpGet] 
-    public async Task<ActionResult<RequestResponse<PagedResponse<BookAddDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) 
+    public async Task<ActionResult<RequestResponse<PagedResponse<BookDTO>>>> GetPage([FromQuery] PaginationSearchQueryParams pagination) 
     {
         var currentUser = await GetCurrentUser();
 
         return currentUser.Result != null ?
             this.FromServiceResponse(await _service.GetBooks(pagination)) :
-            this.ErrorMessageResult<PagedResponse<BookAddDTO>>(currentUser.Error);
+            this.ErrorMessageResult<PagedResponse<BookDTO>>(currentUser.Error);
     }
 
     [Authorize]
