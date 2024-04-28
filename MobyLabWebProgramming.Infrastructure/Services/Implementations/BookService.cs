@@ -182,6 +182,10 @@ left outer join ""authorsOfBooks"" ab on ab.""BookId"" = book.""Id""
             Summary = book.Summary,
             Authors = new Collection<Author>(),
         };
+        if (book.Authors == null || book.Authors.Count == 0)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Authors are mandatory", ErrorCodes.CannotAdd));
+        }
         foreach (var author in book.Authors)
         {
             var authorDB = await _repository.GetAsync<Author>(author.Id, cancellationToken);
@@ -202,7 +206,7 @@ left outer join ""authorsOfBooks"" ab on ab.""BookId"" = book.""Id""
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can delete books!", ErrorCodes.CannotDelete));
         }
 
-        await _repository.DeleteAsync<Author>(id, cancellationToken); // Delete the entity.
+        await _repository.DeleteAsync<Book>(id, cancellationToken); // Delete the entity.
 
         return ServiceResponse.ForSuccess();
     }
