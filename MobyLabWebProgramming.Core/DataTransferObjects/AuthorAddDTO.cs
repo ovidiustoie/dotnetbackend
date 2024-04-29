@@ -6,7 +6,7 @@
 /// </summary>
 public class AuthorAddDTO
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = default!;
     public string FirstName { get; set; } = default!;
     public string LastName { get; set; } = default!;
     public string Description { get; set; } = default!;

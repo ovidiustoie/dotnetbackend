@@ -5,6 +5,7 @@ using MobyLabWebProgramming.Core.Requests;
 using MobyLabWebProgramming.Core.Responses;
 using MobyLabWebProgramming.Infrastructure.Authorization;
 using MobyLabWebProgramming.Infrastructure.Extensions;
+using MobyLabWebProgramming.Infrastructure.Services.Implementations;
 using MobyLabWebProgramming.Infrastructure.Services.Interfaces;
 
 namespace MobyLabWebProgramming.Backend.Controllers;
@@ -61,6 +62,15 @@ public class BookController : AuthorizedController
 
         return currentUser.Result != null ?
             this.FromServiceResponse(await _service.DeleteBook(id)) :
+            this.ErrorMessageResult(currentUser.Error);
+    }
+    [Authorize]
+    [HttpPut] 
+    public async Task<ActionResult<RequestResponse>> Update([FromBody] BookUpdateDTO book) 
+    {
+        var currentUser = await GetCurrentUser();
+        return currentUser.Result != null ?
+            this.FromServiceResponse(await _service.UpdateBook(book, currentUser.Result)) :
             this.ErrorMessageResult(currentUser.Error);
     }
 

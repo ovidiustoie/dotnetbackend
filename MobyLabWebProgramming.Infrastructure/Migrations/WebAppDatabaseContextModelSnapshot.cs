@@ -275,7 +275,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Author", null)
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Book", null)

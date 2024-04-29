@@ -24,8 +24,8 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
            .WithMany(e => e.Books)
            .UsingEntity(
                "BookAuthor",
-               l => l.HasOne(typeof(Author)).WithMany().HasForeignKey("AuthorId").HasPrincipalKey(nameof(Author.Id)),
-               r => r.HasOne(typeof(Book)).WithMany().HasForeignKey("BookId").HasPrincipalKey(nameof(Book.Id)),
+               l => l.HasOne(typeof(Author)).WithMany().OnDelete(DeleteBehavior.Restrict).HasForeignKey("AuthorId").HasPrincipalKey(nameof(Author.Id)),
+               r => r.HasOne(typeof(Book)).WithMany().OnDelete(DeleteBehavior.Cascade).HasForeignKey("BookId").HasPrincipalKey(nameof(Book.Id)),
                j => j.HasKey("BookId", "AuthorId")
            );
     }

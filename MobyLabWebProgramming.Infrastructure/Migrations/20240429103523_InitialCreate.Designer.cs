@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    [Migration("20240410170246_FeedbackEntity")]
-    partial class FeedbackEntity
+    [Migration("20240429103523_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -277,7 +277,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Author", null)
                         .WithMany()
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MobyLabWebProgramming.Core.Entities.Book", null)

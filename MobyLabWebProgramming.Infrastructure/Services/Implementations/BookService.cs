@@ -211,6 +211,35 @@ left outer join ""authorsOfBooks"" ab on ab.""BookId"" = book.""Id""
         return ServiceResponse.ForSuccess();
     }
 
+    public async Task<ServiceResponse> UpdateBook(BookUpdateDTO book, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
+    {
+        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can update the books!", ErrorCodes.CannotUpdate));
+        }
+
+        var entity = await _repository.GetAsync(new BookSpec(book.Id), cancellationToken);
+
+        if (entity != null)
+        {
+            entity.Title = book.Title ?? entity.Title;
+            entity.Summary = book.Summary ?? entity.Summary;
+            if (book.Authors != null && book.Authors.Count == 0)
+            {
+                foreach (var author in book.Authors)
+                {
+                    var authorDB = await _repository.GetAsync<Author>(author.Id, cancellationToken);
+                    if (authorDB != null)
+                        entity.Authors.Add(authorDB);
+                }
+            }
+            
+            await _repository.UpdateAsync(entity, cancellationToken);
+        }
+
+        return ServiceResponse.ForSuccess();
+    }
+
 }
 
 

@@ -77,7 +77,7 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         column: x => x.AuthorId,
                         principalTable: "Author",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_BookAuthor_Book_BookId",
                         column: x => x.BookId,
@@ -103,6 +103,28 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         name: "FK_BookItem_Book_BookId",
                         column: x => x.BookId,
                         principalTable: "Book",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Feedback",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Score = table.Column<int>(type: "integer", nullable: false),
+                    Comment = table.Column<string>(type: "character varying(4095)", maxLength: 4095, nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedback", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Feedback_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -164,6 +186,11 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feedback_UserId",
+                table: "Feedback",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Librarian_UserId",
                 table: "Librarian",
                 column: "UserId",
@@ -182,6 +209,9 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "BookItem");
+
+            migrationBuilder.DropTable(
+                name: "Feedback");
 
             migrationBuilder.DropTable(
                 name: "Librarian");
