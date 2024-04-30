@@ -21,6 +21,8 @@ using System.Data.Common;
 using System.Text.Json;
 using System.Text;
 using Microsoft.Extensions.Primitives;
+using System.Linq;
+using System.Collections;
 
 namespace MobyLabWebProgramming.Infrastructure.Services.Implementations;
 
@@ -35,43 +37,24 @@ public class BookService : IBookService
 
     public async Task<ServiceResponse<BookAddDTO>> GetBook(Guid id, CancellationToken cancellationToken = default)
     {
-
-        using var cmd = _repository.DbContext.Database.GetDbConnection().CreateCommand();
-        var sql =
- $@"select json_agg(root) as result from(SELECT *,
-    (select json_agg(Authors) from(
-         select ba.""AuthorId"" as ""Id"", a.""FullName"" as ""FullName"" from
-
-              ""BookAuthor"" as ba inner join ""Author"" as a on ba.""AuthorId"" = a.""Id""
-
-         where ba.""BookId"" = book.""Id""
-       ) as Authors
-    ) as ""Authors""
-FROM ""Book"" book where  book.""Id"" = @Id) root";
-
-
-        var jsonData = "";
-        if (cmd.Connection != null)
+        var entity = await _repository.GetAsync(new BookSpec(id), cancellationToken);
+        if (entity != null)
         {
-            await cmd.Connection.OpenAsync(cancellationToken);
-            cmd.CommandType = CommandType.Text;
-            cmd.CommandText = sql;
-            var parameter = cmd.CreateParameter();
-            parameter.ParameterName = "Id";
-            parameter.Value = id;
-            cmd.Parameters.Add(parameter);
-            using var reader = await cmd.ExecuteReaderAsync(cancellationToken);
-            if (await reader.ReadAsync(cancellationToken))
-                jsonData = reader["result"].ToString();
-
-        }
-        if (!String.IsNullOrEmpty(jsonData))
-        {
-            var items = JsonSerializer.Deserialize<BookAddDTO[]>(jsonData);
-            if (items != null && items.Length > 0)
+            var res = new BookAddDTO()
             {
-                return ServiceResponse<BookAddDTO>.ForSuccess(items[0]);
+                Title = entity.Title,
+                Summary = entity.Summary,
+                Id = entity.Id,
+            };
+            res.Authors = new List<AuthorRefDTO>();
+            if (entity.Authors != null)
+            {
+                foreach (var author in entity.Authors)
+                {
+                    res.Authors.Add(new AuthorRefDTO() { FullName = author.FullName, Id = author.Id });
+                }
             }
+            return ServiceResponse<BookAddDTO>.ForSuccess(res);
         }
         return ServiceResponse<BookAddDTO>.FromError(CommonErrors.BookNotFound);
     }
@@ -217,24 +200,45 @@ left outer join ""authorsOfBooks"" ab on ab.""BookId"" = book.""Id""
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can update the books!", ErrorCodes.CannotUpdate));
         }
+        if (book.Authors == null || book.Authors.Count == 0)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Authors are mandatory!", ErrorCodes.CannotUpdate));
+        }
 
         var entity = await _repository.GetAsync(new BookSpec(book.Id), cancellationToken);
+
 
         if (entity != null)
         {
             entity.Title = book.Title ?? entity.Title;
             entity.Summary = book.Summary ?? entity.Summary;
-            if (book.Authors != null && book.Authors.Count == 0)
+            var map = new Dictionary<Guid, Author>();
+            foreach (var author in entity.Authors)
             {
-                foreach (var author in book.Authors)
+                map.Add(author.Id, author);
+            }
+
+            foreach (var author in book.Authors)
+            {
+                if (map.ContainsKey(author.Id))
                 {
-                    var authorDB = await _repository.GetAsync<Author>(author.Id, cancellationToken);
-                    if (authorDB != null)
-                        entity.Authors.Add(authorDB);
+                    map.Remove(author.Id);
+                }
+                else
+                {
+                    var authorDb = await _repository.GetAsync<Author>(new AuthorSpec(author.Id), cancellationToken);
+                    if (authorDb != null)
+                    {
+                        entity.Authors.Add(authorDb);
+                    }
                 }
             }
-            
-            await _repository.UpdateAsync(entity, cancellationToken);
+
+            foreach (var author in map.Values)
+            {
+                entity.Authors.Remove(author);
+            }
+            await _repository.UpdateAsync(entity);
         }
 
         return ServiceResponse.ForSuccess();

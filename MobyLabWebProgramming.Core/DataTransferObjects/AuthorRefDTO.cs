@@ -6,7 +6,7 @@
 /// </summary>
 public class AuthorRefDTO
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = default!;
     public string FullName { get; set; } = default!;
   
 }

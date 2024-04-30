@@ -9,8 +9,9 @@ namespace MobyLabWebProgramming.Core.Specifications;
 /// </summary>
 public sealed class BookSpec : BaseSpec<BookSpec, Book>
 {
-    public BookSpec(Guid id) : base(id)
+    public BookSpec(Guid id) 
     {
+        Query.Where(e => e.Id == id).Include("Authors");
     }
  
 }
