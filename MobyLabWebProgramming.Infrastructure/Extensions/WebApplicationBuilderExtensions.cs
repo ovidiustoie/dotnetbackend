@@ -176,7 +176,8 @@ public static class WebApplicationBuilderExtensions
             .AddTransient<IMailService, MailService>()
             .AddTransient<IAuthorService, AuthorService>()
             .AddTransient<IBookService, BookService>()
-            .AddTransient<ILibrarianService, LibrarianService>();
+            .AddTransient<ILibrarianService, LibrarianService>()
+            .AddTransient<IBookItemService, BookItemService>();
 
         return builder;
     }

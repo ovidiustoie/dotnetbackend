@@ -1,9 +1,4 @@
-﻿using System.Data;
-using System.Net;
-using System.Text;
-using System.Xml.Linq;
-using Ardalis.Specification;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Net;
 using MobyLabWebProgramming.Core.DataTransferObjects;
 using MobyLabWebProgramming.Core.Entities;
 using MobyLabWebProgramming.Core.Enums;
