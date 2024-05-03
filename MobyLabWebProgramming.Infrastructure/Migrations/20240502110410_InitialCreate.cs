@@ -136,7 +136,8 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FirstName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     LastName = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "character varying(4095)", maxLength: 4095, nullable: false),
+                    Position = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)

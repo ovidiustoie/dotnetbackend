@@ -167,9 +167,10 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(4095)
+                        .HasColumnType("character varying(4095)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -177,6 +178,11 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Position")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");

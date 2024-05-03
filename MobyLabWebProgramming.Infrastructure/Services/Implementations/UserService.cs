@@ -148,8 +148,21 @@ public class UserService : IUserService
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or the own user can delete the user!", ErrorCodes.CannotDelete));
         }
+        var userToRemove = await _repository.GetAsync(new UserSpec(id), cancellationToken);
+        if (userToRemove != null)
+        {
+            if (userToRemove.Role == UserRoleEnum.Personnel) {
+                var librarian = await _repository.GetAsync(new LibrarianSpec(null, userToRemove.Id), cancellationToken);
+                if (librarian != null)
+                {
+                    return ServiceResponse.FromError(new(HttpStatusCode.Conflict, "This user is linked to a librarian!", ErrorCodes.CannotDelete));
+                }
+            }
+            // Remove user
+            await _repository.DeleteAsync<User>(id, cancellationToken); 
 
-        await _repository.DeleteAsync<User>(id, cancellationToken); // Delete the entity.
+        }
+        
 
         return ServiceResponse.ForSuccess();
     }

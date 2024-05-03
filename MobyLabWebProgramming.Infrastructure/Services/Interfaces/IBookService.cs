@@ -10,5 +10,6 @@ public interface IBookService
     public Task<ServiceResponse> AddBook(BookAddDTO book, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse> DeleteBook(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
     public Task<ServiceResponse> UpdateBook(BookUpdateDTO book, UserDTO? requestingUser = default, CancellationToken cancellationToken = default);
+    public Task<ServiceResponse<int>> GetBookCount(CancellationToken cancellationToken = default);
 
 }

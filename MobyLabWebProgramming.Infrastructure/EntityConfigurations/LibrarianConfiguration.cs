@@ -24,6 +24,10 @@ public class LibrarianConfiguration : IEntityTypeConfiguration<Librarian>
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
+        builder.Property(e => e.Description)
+            .HasMaxLength(4095);
+        builder.Property(e => e.Position)
+                 .HasMaxLength(255);
         builder.HasOne(e => e.User) // This specifies a one-to-many relation.
           .WithOne(e => e.Librarian) // This provides the reverse mapping for the one-to-many relation. 
           .HasForeignKey<Librarian>(e => e.UserId) // Here the foreign key column is specified.

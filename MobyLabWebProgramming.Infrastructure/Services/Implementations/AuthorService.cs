@@ -44,7 +44,7 @@ public class AuthorService : IAuthorService
 
     
     public async Task<ServiceResponse<int>> GetAuthorCount(CancellationToken cancellationToken = default) =>
-        ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<User>(cancellationToken)); // Get the count of all user entities in the database.
+        ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<Author>(cancellationToken)); 
 
     public async Task<ServiceResponse> AddAuthor(AuthorAddDTO author, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {

@@ -34,6 +34,8 @@ public class BookService : IBookService
     {
         _repository = repository;
     }
+    public async Task<ServiceResponse<int>> GetBookCount(CancellationToken cancellationToken = default) =>
+       ServiceResponse<int>.ForSuccess(await _repository.GetCountAsync<Book>(cancellationToken));
 
     public async Task<ServiceResponse<BookAddDTO>> GetBook(Guid id, CancellationToken cancellationToken = default)
     {

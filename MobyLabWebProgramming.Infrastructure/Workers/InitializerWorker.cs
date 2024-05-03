@@ -20,7 +20,108 @@ public class InitializerWorker : BackgroundService
         _logger = logger; // The logger instance is injected here.
         _serviceProvider = serviceProvider; // Here the service provider is injected to request other components on runtime at request.
     }
+    private async void CreateAuthors(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope(); 
+            var authorService = scope.ServiceProvider.GetService<IAuthorService>(); 
+                                                                                
 
+            if (authorService == null)
+            {
+                _logger.LogInformation("Couldn't create the authior service!");
+
+                return;
+            }
+
+            var count = await authorService.GetAuthorCount(cancellationToken);
+
+            if (count.Result == 0)
+            {
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Mihai",
+                    LastName = "Eminescu",
+                    Description = "Poet, prozator și jurnalist român, considerat, în general, ca fiind cea mai cunoscută și influentă personalitate din literatura română."
+                }, cancellationToken: cancellationToken);
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Eugen",
+                    LastName = "Ionescu",
+                    Description = "Scriitor de limbă franceză originar din România, protagonist al teatrului absurdului."
+                }, cancellationToken: cancellationToken);
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Mircea",
+                    LastName = "Eliade",
+                    Description = "Istoric al religiilor, scriitor de ficțiune, filozof și profesor de origine română."
+                }, cancellationToken: cancellationToken);
+
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Albert",
+                    LastName = "Camus",
+                    Description = "Romancier, dramaturg și filozof algerian, francez, reprezentant al existențialismului."
+                }, cancellationToken: cancellationToken);
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "James",
+                    LastName = "Joyce",
+                    Description = "Prozator și poet irlandez, considerat unul dintre cei mai importanți scriitori ai secolului al XX-lea."
+                }, cancellationToken: cancellationToken);
+
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Feodor",
+                    LastName = "Dostoievski",
+                    Description = "Unul din cei mai importanți scriitori ruși."
+                }, cancellationToken: cancellationToken);
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Franz",
+                    LastName = "Kafka",
+                    Description = "Scriitor de limbă germană, evreu originar din Praga."
+                }, cancellationToken: cancellationToken);
+
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Charles",
+                    LastName = "Baudelaire",
+                    Description = "Poet francez care a produs, de asemenea, lucrări notabile ca eseist."
+                }, cancellationToken: cancellationToken);
+
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Edgar Allan",
+                    LastName = "Poe",
+                    Description = "Scriitor, poet, redactor și critic literar american."
+                }, cancellationToken: cancellationToken);
+
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Victor",
+                    LastName = "Hugo",
+                    Description = "Poet, dramaturg și romancier francez."
+                }, cancellationToken: cancellationToken);
+
+                await authorService.AddAuthor(new()
+                {
+                    FirstName = "Knut",
+                    LastName = "Hamsun",
+                    Description = "Scriitor norvegian. A avut un rol important în modernizarea romanului european."
+                }, cancellationToken: cancellationToken);
+            }
+
+           
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while initializing database!");
+        }
+       
+
+    }
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         try
@@ -55,5 +156,6 @@ public class InitializerWorker : BackgroundService
         {
             _logger.LogError(ex, "An error occurred while initializing database!");
         }
+        CreateAuthors(cancellationToken);
     }
 }
