@@ -45,6 +45,24 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Feedback",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Score = table.Column<int>(type: "integer", nullable: false),
+                    SiteDificulty = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    RecommendToOthers = table.Column<bool>(type: "boolean", nullable: false),
+                    SiteGoal = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Sugestion = table.Column<string>(type: "character varying(4095)", maxLength: 4095, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Feedback", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -108,28 +126,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Feedback",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Score = table.Column<int>(type: "integer", nullable: false),
-                    Comment = table.Column<string>(type: "character varying(4095)", maxLength: 4095, nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Feedback", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Feedback_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Librarian",
                 columns: table => new
                 {
@@ -185,11 +181,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                 name: "IX_BookItem_BookId",
                 table: "BookItem",
                 column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feedback_UserId",
-                table: "Feedback",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Librarian_UserId",

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MobyLabWebProgramming.Infrastructure.Migrations
 {
     [DbContext(typeof(WebAppDatabaseContext))]
-    [Migration("20240502110410_InitialCreate")]
+    [Migration("20240504055247_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,25 +137,33 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Comment")
-                        .HasMaxLength(4095)
-                        .HasColumnType("character varying(4095)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("RecommendToOthers")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("Score")
                         .HasColumnType("integer");
 
+                    b.Property<string>("SiteDificulty")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("SiteGoal")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Sugestion")
+                        .HasMaxLength(4095)
+                        .HasColumnType("character varying(4095)");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Feedback");
                 });
@@ -304,17 +312,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Feedback", b =>
-                {
-                    b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.Librarian", b =>
                 {
                     b.HasOne("MobyLabWebProgramming.Core.Entities.User", "User")
@@ -344,8 +341,6 @@ namespace MobyLabWebProgramming.Infrastructure.Migrations
 
             modelBuilder.Entity("MobyLabWebProgramming.Core.Entities.User", b =>
                 {
-                    b.Navigation("Feedbacks");
-
                     b.Navigation("Librarian");
 
                     b.Navigation("UserFiles");

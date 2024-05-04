@@ -16,19 +16,21 @@ public class FeedbackConfiguration : IEntityTypeConfiguration<Feedback>
         builder.HasKey(x => x.Id);
         builder.Property(e => e.Score)
             .IsRequired();
-        builder.Property(e => e.Comment)
+        builder.Property(e => e.SiteDificulty)
+           .HasMaxLength(255)
+           .IsRequired();
+        builder.Property(e => e.SiteGoal)
+          .HasMaxLength(255)
+          .IsRequired();
+        builder.Property(e => e.RecommendToOthers)
+           .IsRequired();
+        builder.Property(e => e.Sugestion)
             .HasMaxLength(4095)
             .IsRequired(false);
         builder.Property(e => e.CreatedAt)
             .IsRequired();
         builder.Property(e => e.UpdatedAt)
             .IsRequired();
-        builder.HasOne(e => e.User)
-            .WithMany(e => e.Feedbacks) // This provides the reverse mapping for the one-to-many relation. 
-            .HasForeignKey(e => e.UserId)
-            .HasPrincipalKey(e => e.Id)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
     }
 
 }

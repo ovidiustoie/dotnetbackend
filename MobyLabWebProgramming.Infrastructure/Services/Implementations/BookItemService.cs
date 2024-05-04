@@ -47,9 +47,9 @@ public class BookItemService : IBookItemService
 
     public async Task<ServiceResponse> AddBookItem(BookItemDTO bookItem, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can create the librarians", ErrorCodes.CannotAdd));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can create the book items", ErrorCodes.CannotAdd));
         }
         if (String.IsNullOrEmpty(bookItem.BarCode))
         {
@@ -74,7 +74,7 @@ public class BookItemService : IBookItemService
 
     public async Task<ServiceResponse> UpdateBookItem(BookItemUpdateDTO bookItem, UserDTO? requestingUser, CancellationToken cancellationToken = default)
     {
-        if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
+        if (requestingUser != null && requestingUser.Role == UserRoleEnum.Client)
         {
             return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can update book items!", ErrorCodes.CannotUpdate));
         }

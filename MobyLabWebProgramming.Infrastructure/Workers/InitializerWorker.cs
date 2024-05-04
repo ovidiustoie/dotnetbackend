@@ -30,7 +30,7 @@ public class InitializerWorker : BackgroundService
 
             if (authorService == null)
             {
-                _logger.LogInformation("Couldn't create the authior service!");
+                _logger.LogInformation("Couldn't create the author service!");
 
                 return;
             }
@@ -112,14 +112,67 @@ public class InitializerWorker : BackgroundService
                     Description = "Scriitor norvegian. A avut un rol important în modernizarea romanului european."
                 }, cancellationToken: cancellationToken);
             }
-
-           
+        
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while initializing database!");
         }
        
+
+    }
+    private async void CreateLibrarians(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await using var scope = _serviceProvider.CreateAsyncScope();
+            var librarianService = scope.ServiceProvider.GetService<ILibrarianService>();
+
+
+            if (librarianService == null)
+            {
+                _logger.LogInformation("Couldn't create the librarian service!");
+
+                return;
+            }
+
+            var count = await librarianService.GetLibrarianCount(cancellationToken);
+
+            if (count.Result == 0)
+            {
+                await librarianService.AddLibrarian(new()
+                {
+                    FirstName = "Mihai",
+                    LastName = "Ionescu",
+                    Position = "Director",
+                    Email = "miion@bjb.com",
+                    Description = "Cel mai bun director."
+                }, cancellationToken: cancellationToken);
+                await librarianService.AddLibrarian(new()
+                {
+                    FirstName = "Alexandra",
+                    LastName = "Georgescu",
+                    Position = "Director adjunct",
+                    Email = "algeo@bjb.com",
+                    Description = "Cel mai buna directoare adjuncta."
+                }, cancellationToken: cancellationToken);
+                await librarianService.AddLibrarian(new()
+                {
+                    FirstName = "Vasile",
+                    LastName = "Popescu",
+                    Position = "Biblotecar",
+                    Email = "vapop@bjb.com",
+                    Description = "Nu doarme in timpul orelor de lucru."
+                }, cancellationToken: cancellationToken);
+
+            }
+       
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while initializing database!");
+        }
+
 
     }
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -157,5 +210,6 @@ public class InitializerWorker : BackgroundService
             _logger.LogError(ex, "An error occurred while initializing database!");
         }
         CreateAuthors(cancellationToken);
+        CreateLibrarians(cancellationToken);
     }
 }
