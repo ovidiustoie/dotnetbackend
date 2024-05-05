@@ -11,7 +11,9 @@ public static class CommonErrors
     public static ErrorMessage AuthorNotFound => new(HttpStatusCode.NotFound, "Author doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage LibrarianNotFound => new(HttpStatusCode.NotFound, "Librarian doesn't exist!", ErrorCodes.EntityNotFound);
     public static ErrorMessage BookItemNotFound => new(HttpStatusCode.NotFound, "Book item doesn't exist!", ErrorCodes.EntityNotFound);
+    public static ErrorMessage FeedbackNotFound => new(HttpStatusCode.NotFound, "Feedback doesn't exist!", ErrorCodes.EntityNotFound);
     
+
     public static ErrorMessage BookNotFound => new(HttpStatusCode.NotFound, "Book doesn't exist!", ErrorCodes.EntityNotFound);
 
     public static ErrorMessage FileNotFound => new(HttpStatusCode.NotFound, "File not found on disk!", ErrorCodes.PhysicalFileNotFound);

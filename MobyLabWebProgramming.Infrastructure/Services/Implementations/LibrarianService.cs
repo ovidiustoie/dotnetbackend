@@ -50,7 +50,7 @@ public class LibrarianService : ILibrarianService
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin) 
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can create the librarians", ErrorCodes.CannotAdd));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can create librarians", ErrorCodes.CannotAdd));
         }
         if (String.IsNullOrEmpty(librarian.FirstName))
         {
@@ -97,7 +97,7 @@ public class LibrarianService : ILibrarianService
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)
         {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin or personal can update the librarian!", ErrorCodes.CannotUpdate));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can update librarians!", ErrorCodes.CannotUpdate));
         }
         var entity = await _repository.GetAsync(new LibrarianSpec(librarian.Id, null), cancellationToken);
 
@@ -116,7 +116,7 @@ public class LibrarianService : ILibrarianService
     public async Task<ServiceResponse> DeleteLibrarian(Guid id, UserDTO? requestingUser = default, CancellationToken cancellationToken = default)
     {
         if (requestingUser != null && requestingUser.Role != UserRoleEnum.Admin)        {
-            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can delete the librarians!", ErrorCodes.CannotDelete));
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Only the admin can remove librarians!", ErrorCodes.CannotDelete));
         }
         var librarianDb = await _repository.GetAsync(new LibrarianSpec(id, null), cancellationToken);
         if (librarianDb != null) {
