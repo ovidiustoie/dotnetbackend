@@ -21,7 +21,7 @@ public class BookController : AuthorizedController
     {
         _service = bookService;
     }
-    // [Authorize] 
+    [Authorize] 
     [HttpGet("{id:guid}")] 
     public async Task<ActionResult<RequestResponse<BookAddDTO>>> GetById([FromRoute] Guid id) 
     {

@@ -1,0 +1,90 @@
+Backend
+
+Repository Pattern/ORM  --> Class Diagram UML  
+    Minim 5 entități (în afara de tabele de merge pentru relații many-to-many) – 3 puncte
+    Relații entități (one-to-one, one-to-many, many-to-many) – 3 puncte
+    Configurare relații utilizând FluentAPI/Atribute – 3 puncte
+Basic JWT Auth
+    Adăugare claims în token (roluri, alte informații în afara de cele din scheletul de cod) – 3 puncte
+       -> WebApplicationBuilderExtensions ->  .RequireClaim(ClaimTypes.Role);
+    Permisiuni bazate pe roluri cu logica de verificat drepturile în backend – 3 puncte
+       -> Exemplu BookService -> numai admin si personal pot sa modifice carti
+    Autorizare controllere – 3 puncte
+       -> Exemplu BookController ->  Getpage/Get/delete/put au [Authorize] 
+CRUD Controllers
+    Controllere Basic (Get cu ID, Get cu listă, Post, Put, Delete + altele) – 4 puncte    
+    -> Exemplu BookController Getpage/Get/delete/put
+    -> Exemplu UserController -> am adaugat  Register (pentru ca un client sa se inscrie)
+
+    Error Handling (error codes) – 3 puncte
+    -> Exemplu BookController AddBook: Nu putem inregistra o carte fara autor:  
+        if (book.Authors == null || book.Authors.Count == 0)
+        {
+            return ServiceResponse.FromError(new(HttpStatusCode.Forbidden, "Authors are mandatory", ErrorCodes.CannotAdd));
+        }  
+ 
+DTOs
+    Utilizarea de DTO-uri pentru interacțiunea cu controllerele (request/response) – 5 puncte
+    -> exemplu BookDTO
+
+
+Remarci: 
+-> crearea de bibliotecari poate fi facuta doar de admin. Automat creem un utilizator (User). Punct slab: parola utilizatorului este  adresa sa de email
+
+-> Pentru a obtine lista de carti, si fiecare carte sa aiba lista de autori nu am folosit Entity Framework, am utilizat un sql in dur cu grup by si STRING_AGG (BookService) 
+   Automat a trebuit sa executam 2 requete SQL: 1/ pentru a obtine datele, 2/ pentru a obtine numarul de inregistrari  necesare paginarii
+   Asa am rezolvat cautarea cartilor dupa titlu sau dupa autor
+
+
+Frontend
+Register
+  Formular register - nume, alte informații relevante, username/email + parolă/validare parolă (trebuie să funcționeze apoi login-ul) – 4 puncte
+  --> este accesibila in fereastra de login prin link-ul "Cont nou"
+Routing
+   NavBar - minim 3 pagini (în afara de cele din scheletul de cod) – 4 puncte
+Table views
+   Două pagini cu tabele sau liste paginate, cu minim 4 coloane/4 câmpuri cu informații afișate fiecare – 4 puncte
+      -> Carti
+   Căutare – 3 puncte
+      -> Carti
+   Paginare – 2 puncte
+      -> Carti
+Add/Edit/Delete date (pentru fiecare tabel/listă)
+   Adăugare intrare – 2 puncte
+   Editare intrare – 2 puncte
+        BookTable.tsx -->
+
+      {
+                                    isPersonnel && <BookUpdateDialog id={entry.id} />
+      }
+
+   Ștergere intrare – 2 puncte
+     Exemplu: BookTable.tsx -->
+      {
+                                    isPersonnel && <IconButton color="error" onClick={() => removeHandler(entry.id || '')}>
+                                        <DeleteIcon color="error" fontSize='small' />
+                                    </IconButton>
+      } 
+   Modală confirmare – 2 puncte
+     --> am utilizat pachetul  material-ui-confirm
+     Exemplu BookTable.tsx 
+    
+    const confirm = useConfirm();
+    const removeHandler = (id: string) => {
+        confirm({
+            title: formatMessage({ id: "globals.confirm" }),
+            description: formatMessage({ id: "globals.confirmRemove" }),
+            confirmationText: formatMessage({ id: "globals.confirmOK" }),
+            cancellationText: formatMessage({ id: "globals.confirmCancel" }),
+        }).then(() => remove(id || '')).catch(() => { });
+    };    
+
+
+  
+Formular feedback
+   Un formular de feedback de la utilizatori (legat cu backend-ul) cu cel puțin un select, un buton radio, un checkbox și o căsuță de text - 5 puncte
+Bonus
+  Prezentare proiect complet până în săptămâna 9 – 5 puncte -> Nu
+  Funcționalități adiționale - 5 puncte -> Nu
+
+

@@ -1,0 +1,55 @@
+@startuml
+class User {
+  Name: string
+  Email: string
+  Password: string
+  Role: string
+  UserFiles: UserFile[]
+}
+class UserFile {
+  Path: string
+  Name: string
+  Description: string
+  User: User
+}
+class Author {
+  FirstName: string
+  LastName: string
+  FullName: string
+  Description: string,
+  Books: Book[]
+}
+class Book {
+  Title: string
+  Summary: string
+  BookItems: BookItem[]
+  Authors: Author[]
+ }
+ 
+class BookItem {
+  BarCode: string
+  Book: Book
+ 
+}
+class Librarian {
+  FirstName: string
+  LastName: string
+  Position: string
+  Description: string
+  User: User
+}
+class Feedback {
+  Score: integer
+  SiteDificulty: string
+  RecommendToOthers: bool
+  SiteGoal: string
+  Sugestion: string
+}
+
+
+User"User"  --> "UserFiles" UserFile
+Author"Authors"  <--> "Books" Book
+Book"Book"  --> "BookItems" BookItem
+User"Librarian"  <--> "User" Librarian
+
+@enduml
